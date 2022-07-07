@@ -30,6 +30,10 @@
         {
             this.panelLeft = new System.Windows.Forms.Panel();
             this.btAbout = new System.Windows.Forms.Button();
+            this.panelSteganography = new System.Windows.Forms.Panel();
+            this.btUnmerge = new System.Windows.Forms.Button();
+            this.btMerge = new System.Windows.Forms.Button();
+            this.btSteganography = new System.Windows.Forms.Button();
             this.panelSegmentation = new System.Windows.Forms.Panel();
             this.btOtsu = new System.Windows.Forms.Button();
             this.btWatershed = new System.Windows.Forms.Button();
@@ -46,6 +50,7 @@
             this.btBlur = new System.Windows.Forms.Button();
             this.btSmooth = new System.Windows.Forms.Button();
             this.panelOperations = new System.Windows.Forms.Panel();
+            this.btDilate = new System.Windows.Forms.Button();
             this.btSkeletonize = new System.Windows.Forms.Button();
             this.btPosterize = new System.Windows.Forms.Button();
             this.btThresholdingGray = new System.Windows.Forms.Button();
@@ -74,8 +79,8 @@
             this.btRestoreDown = new System.Windows.Forms.Button();
             this.btMaximize = new System.Windows.Forms.Button();
             this.btExit = new System.Windows.Forms.Button();
-            this.btDilate = new System.Windows.Forms.Button();
             this.panelLeft.SuspendLayout();
+            this.panelSteganography.SuspendLayout();
             this.panelSegmentation.SuspendLayout();
             this.panelSharp.SuspendLayout();
             this.panelSmooth.SuspendLayout();
@@ -92,6 +97,8 @@
             // 
             this.panelLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(30)))), ((int)(((byte)(54)))));
             this.panelLeft.Controls.Add(this.btAbout);
+            this.panelLeft.Controls.Add(this.panelSteganography);
+            this.panelLeft.Controls.Add(this.btSteganography);
             this.panelLeft.Controls.Add(this.panelSegmentation);
             this.panelLeft.Controls.Add(this.btSegmentation);
             this.panelLeft.Controls.Add(this.panelSharp);
@@ -120,13 +127,74 @@
             this.btAbout.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(120)))), ((int)(((byte)(255)))));
             this.btAbout.Image = global::APO.Properties.Resources.infoImage;
             this.btAbout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btAbout.Location = new System.Drawing.Point(0, 1081);
+            this.btAbout.Location = new System.Drawing.Point(0, 1181);
             this.btAbout.Name = "btAbout";
             this.btAbout.Size = new System.Drawing.Size(150, 40);
             this.btAbout.TabIndex = 13;
             this.btAbout.Text = "About";
             this.btAbout.UseVisualStyleBackColor = true;
             this.btAbout.Click += new System.EventHandler(this.btAbout_Click);
+            // 
+            // panelSteganography
+            // 
+            this.panelSteganography.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(13)))), ((int)(((byte)(18)))), ((int)(((byte)(31)))));
+            this.panelSteganography.Controls.Add(this.btUnmerge);
+            this.panelSteganography.Controls.Add(this.btMerge);
+            this.panelSteganography.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelSteganography.Location = new System.Drawing.Point(0, 1121);
+            this.panelSteganography.Name = "panelSteganography";
+            this.panelSteganography.Size = new System.Drawing.Size(150, 60);
+            this.panelSteganography.TabIndex = 15;
+            // 
+            // btUnmerge
+            // 
+            this.btUnmerge.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btUnmerge.FlatAppearance.BorderSize = 0;
+            this.btUnmerge.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btUnmerge.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(109)))), ((int)(((byte)(255)))));
+            this.btUnmerge.Location = new System.Drawing.Point(0, 30);
+            this.btUnmerge.Name = "btUnmerge";
+            this.btUnmerge.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.btUnmerge.Size = new System.Drawing.Size(150, 30);
+            this.btUnmerge.TabIndex = 2;
+            this.btUnmerge.Text = "Unmerge";
+            this.btUnmerge.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btUnmerge.UseVisualStyleBackColor = true;
+            this.btUnmerge.Click += new System.EventHandler(this.btUnmerge_Click);
+            // 
+            // btMerge
+            // 
+            this.btMerge.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btMerge.FlatAppearance.BorderSize = 0;
+            this.btMerge.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btMerge.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(109)))), ((int)(((byte)(255)))));
+            this.btMerge.Location = new System.Drawing.Point(0, 0);
+            this.btMerge.Name = "btMerge";
+            this.btMerge.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.btMerge.Size = new System.Drawing.Size(150, 30);
+            this.btMerge.TabIndex = 0;
+            this.btMerge.Text = "Merge";
+            this.btMerge.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btMerge.UseVisualStyleBackColor = true;
+            this.btMerge.Click += new System.EventHandler(this.btMerge_Click);
+            // 
+            // btSteganography
+            // 
+            this.btSteganography.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btSteganography.FlatAppearance.BorderSize = 0;
+            this.btSteganography.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btSteganography.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.btSteganography.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(120)))), ((int)(((byte)(255)))));
+            this.btSteganography.Image = global::APO.Properties.Resources.steganographyImage;
+            this.btSteganography.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btSteganography.Location = new System.Drawing.Point(0, 1081);
+            this.btSteganography.Name = "btSteganography";
+            this.btSteganography.Size = new System.Drawing.Size(150, 40);
+            this.btSteganography.TabIndex = 14;
+            this.btSteganography.Text = "Steganography";
+            this.btSteganography.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btSteganography.UseVisualStyleBackColor = true;
+            this.btSteganography.Click += new System.EventHandler(this.btSteganography_Click);
             // 
             // panelSegmentation
             // 
@@ -375,6 +443,22 @@
             this.panelOperations.Name = "panelOperations";
             this.panelOperations.Size = new System.Drawing.Size(150, 210);
             this.panelOperations.TabIndex = 10;
+            // 
+            // btDilate
+            // 
+            this.btDilate.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btDilate.FlatAppearance.BorderSize = 0;
+            this.btDilate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btDilate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(109)))), ((int)(((byte)(255)))));
+            this.btDilate.Location = new System.Drawing.Point(0, 180);
+            this.btDilate.Name = "btDilate";
+            this.btDilate.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
+            this.btDilate.Size = new System.Drawing.Size(150, 30);
+            this.btDilate.TabIndex = 7;
+            this.btDilate.Text = "Dilate";
+            this.btDilate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btDilate.UseVisualStyleBackColor = true;
+            this.btDilate.Click += new System.EventHandler(this.btDilate_Click);
             // 
             // btSkeletonize
             // 
@@ -789,22 +873,6 @@
             this.btExit.UseVisualStyleBackColor = true;
             this.btExit.Click += new System.EventHandler(this.btExit_Click);
             // 
-            // btDilate
-            // 
-            this.btDilate.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btDilate.FlatAppearance.BorderSize = 0;
-            this.btDilate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btDilate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(109)))), ((int)(((byte)(255)))));
-            this.btDilate.Location = new System.Drawing.Point(0, 180);
-            this.btDilate.Name = "btDilate";
-            this.btDilate.Padding = new System.Windows.Forms.Padding(35, 0, 0, 0);
-            this.btDilate.Size = new System.Drawing.Size(150, 30);
-            this.btDilate.TabIndex = 7;
-            this.btDilate.Text = "Dilate";
-            this.btDilate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btDilate.UseVisualStyleBackColor = true;
-            this.btDilate.Click += new System.EventHandler(this.btDilate_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -819,6 +887,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "APO";
             this.panelLeft.ResumeLayout(false);
+            this.panelSteganography.ResumeLayout(false);
             this.panelSegmentation.ResumeLayout(false);
             this.panelSharp.ResumeLayout(false);
             this.panelSmooth.ResumeLayout(false);
@@ -882,6 +951,10 @@
         private System.Windows.Forms.Button btAbout;
         private System.Windows.Forms.Button btMedian;
         private System.Windows.Forms.Button btDilate;
+        private System.Windows.Forms.Button btSteganography;
+        private System.Windows.Forms.Panel panelSteganography;
+        private System.Windows.Forms.Button btUnmerge;
+        private System.Windows.Forms.Button btMerge;
     }
 }
 

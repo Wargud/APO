@@ -27,14 +27,13 @@ namespace APO
             this.image = image;
 
 
-            Bitmap img = image.ToBitmap();
-            for (int height = 0; height < img.Height; ++height)
+            for (int height = 0; height < image.Height; ++height)
             {
-                for (int width = 0; width < img.Width; ++width)
+                for (int width = 0; width < image.Width; ++width)
                 {
-                    ++red[(int) img.GetPixel(width, height).R];
-                    ++green[(int) img.GetPixel(width, height).G];
-                    ++blue[(int) img.GetPixel(width, height).B];
+                    ++red[(int) image.Data[height, width, 2]];
+                    ++green[(int) image.Data[height, width, 1]];
+                    ++blue[(int) image.Data[height, width, 0]];
                 }
             }
             this.isGray = checkIsGrayScale();

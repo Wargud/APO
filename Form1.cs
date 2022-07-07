@@ -80,6 +80,7 @@ namespace APO
             panelSmooth.Visible = false;
             panelSharp.Visible = false;
             panelSegmentation.Visible = false;
+            panelSteganography.Visible = false;
             
         }
         private void hideSubMenu()
@@ -90,6 +91,7 @@ namespace APO
             if(panelSmooth.Visible) panelSmooth.Visible = false;
             if(panelSharp.Visible) panelSharp.Visible = false;
             if(panelSegmentation.Visible) panelSegmentation.Visible = false;
+            if(panelSteganography.Visible) panelSteganography.Visible = false;
         }
         private void showSubMenu(Panel subMenu)
         {
@@ -541,14 +543,199 @@ namespace APO
         }
         #endregion
 
+        #region Steganography
+        private void btSteganography_Click(object sender, EventArgs e)
+        {
+            showSubMenu(panelSteganography);
+        }
+
+        private void btMerge_Click(object sender, EventArgs e)
+        {
+            //Wybór obrazu ukrywanego oraz ukrywającego
+            Merge merge = new Merge(images);
+            merge.ShowDialog();
+
+            //Jeżeli obrazy zostały wybrane
+            if(merge.IsSet && tcWorkSpace.TabCount > 0)
+            {
+                String name = merge.CoverImage.getName + "_merge";
+
+                //wykonanie funkcji steganographyMerge na zmiennych z klasy Merge
+                Image<Bgr, byte> image = steganographyMerge(merge.CoverImage, merge.MergeImage);
+
+                int index = name.IndexOf('(');
+                if (index == name.Length - 2)
+                    name = name.Substring(0, index);
+                addTab(new ImageUtility(name, image));
+            }
+        }
+
+        private void btUnmerge_Click(object sender, EventArgs e)
+        {
+
+            //jeżeli obraz jest wybrany
+            if (tcWorkSpace.TabCount > 0)
+            {
+                String name = tcWorkSpace.SelectedTab.Text + "_unmerge";
+
+                //wyknanie funkcji steganographyUnmerge na zmiennej wybranej w programie
+                Image<Bgr, byte> image = steganographyUnmerge(images[tcWorkSpace.SelectedTab.Text]);
+
+                int index = name.IndexOf('(');
+                if (index == name.Length - 2)
+                    name = name.Substring(0, index);
+                addTab(new ImageUtility(name, image));
+            }
+        }
+
+        //wymaga obrazu ukrywanego oraz ukrywającego
+        private Image<Bgr, byte> steganographyMerge(ImageUtility cover, ImageUtility merge)
+        {
+            //przygotowanie wszystkich potrzebnych zmiennych do ukrycia obrazu w obrazie
+            //obraz ukrywający
+            Image<Bgr, byte> imageCover = cover.getImage;
+            //obraz ukrywany
+            Image<Bgr, byte> imageMerge = merge.getImage;
+            //szerokość i wysokość obrazu ukrywającego
+            int imageWidth = imageCover.Width;
+            int imageHeight = imageCover.Height;
+            //szerokość i wysokość obrazu ukrywanego
+            int mergeWidth = imageMerge.Width;
+            int mergeHeight = imageMerge.Height;
+            //nowy obraz o wymiarach obrazu ukrywającego
+            Image<Bgr, byte> image = new Image<Bgr, byte>(imageWidth, imageHeight);
+
+            //dwie pętle przechodzące przez każdy piksel obrazu ukrywającego
+            for(int row = 0; row < imageHeight; ++row)           
+                for(int col = 0; col < imageWidth; ++col)
+                {
+                    //jeżeli obraz na aktualnej szerokości podzielonej przez 2 jest mniejszy od szerokości obrazu ukrywanego
+                    // i aktualna wysokość jest mniejsza od wysokości obrazu ukrywanego
+                    if(col/2 < mergeWidth && row < mergeHeight)
+                    {
+                        //to wykonaj funkcję merge Pixel dla każdego z 3 kanałów kolorów wykorzystując obraz ukrywany
+                        for(int i = 0; i<3; ++i)
+                            image.Data[row, col, i] = mergePixel(imageCover.Data[row, col, i], imageMerge.Data[row, col/2, i], col%2);
+                    }
+                    else
+                    {
+                        //w przeciwnym wypadku wykonaj funkcję merge Pixel dla każdego z 3 kanałów kolorów wykorzystując wartość 0
+                        for (int i = 0; i<3; ++i)
+                            image.Data[row, col, i] = mergePixel(imageCover.Data[row, col, i], (byte) 0, 0);
+                    }
+                }            
+            //zwróć plik graficzny z ukrytym obrazem
+            return image;
+        }
+
+        //wymaga bajtu obrazu ukrywającego, ukrywanego oraz informacji która to część ukrywania (czy 1 czy 2)
+        private byte mergePixel(byte cover, byte merge, int part)
+        {
+            //zamienia oba piksele na ciągi znaków reprezentujące wartości binarne pikseli
+            string coverBin = Convert.ToString(cover, 2).PadLeft(8, '0');
+            string mergeBin = Convert.ToString(merge, 2).PadLeft(8, '0');
+
+            //Jeżeli to 1 część
+            if(part == 0)
+                //połącz 6 najważniejszych bitów obrazu ukrywającego z 1 i 2 najważniejszym ukrywanego
+                return Convert.ToByte(coverBin.Substring(0, 6) + mergeBin.Substring(0, 2), 2);
+            //W przeciwnym wypadku (to część 2)
+            else
+                //połącz 6 najważniejszych bitów obrazu ukrywającego z 3 i 4 najważniejszym ukrywanego
+                return Convert.ToByte(coverBin.Substring(0, 6) + mergeBin.Substring(2, 2), 2);
+        }
+
+        //wymaga pliku graficznego z ukrytym w nim obrazem
+        private Image<Bgr, byte> steganographyUnmerge(ImageUtility mergedImage)
+        {
+            //przygotowani wszystkich potrzebnych zmiennych do odczytu obrazu ukrywanego w obrazie ukrywającym
+            //plik graficzny z ukrytym obrazem
+            Image<Bgr, byte> image = mergedImage.getImage;
+            //szerokość i wysokość pliku graficznego
+            int imageWidth = image.Width;
+            int imageHeight = image.Height;
+            //maksymalna kolumna i rząd z przechowywanym obrazem ukrywanym
+            int maxCol = 0;
+            int maxRow = 0;
+
+            //dwie pętle przechodzące po wszystkich pikselach pliku graficznego
+            for (int row = 0; row < imageHeight; ++row)
+                for (int col = 0; col < imageWidth; ++col)
+                {
+                    //pętla przechodząca przez wszystkie 3 kanały kolorów
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        //jeżeli piskel ma ukrytą wartość i zmienna przechowująca maksymalną wysokość jest mniejsza od lokalizacji aktualnej
+                        //to zmienia wartość zmiennej przechowującej maksymalną wysokość na lokalizację aktualnej
+                        if (haveValue(image.Data[row, col, i]) && maxRow < row)
+                            maxRow = row;
+
+                        //jeżeli piskel ma ukrytą wartość i zmienna przechowująca maksymalną szerokość jest mniejsza od lokalizacji aktualnej
+                        //to zmienia wartość zmiennej przechowującej maksymalną szerokość na lokalizację aktualnej
+                        if (haveValue(image.Data[row, col, i]) && maxCol < col / 2)
+                            maxCol = col/2;
+                    }
+                }
+
+
+            //na podstawie aktualnych danych tworzy zmienne przechowujące wartości wysokości i szerokości obrazu do odczytu
+            int newImageHeight = maxRow+1;
+            int newImageWidth = maxCol+1;
+            //tworzy zmienną która zostanie zwrócona jako obraz ukrywany
+            Image<Bgr, byte> newImage = new Image<Bgr, byte>(newImageWidth, newImageHeight);
+            
+            //pętla przechodzi po wszystkich pikselach obrazu ukrywanego
+            for (int row = 0; row < newImageHeight; ++row)
+                for (int col = 0; col < newImageWidth * 2; col = col + 2)
+                {
+                    //pętla przechodzi przez wszystkie 3 kanały kolorów
+                    //oraz wprowadza dane z pliku graficznego do obrazu ukrywanego
+                    for (int i = 0; i < 3; ++i)
+                        newImage.Data[row, col/2, i] = unmergePixel(image.Data[row, col, i], image.Data[row, col+1, i]);
+                }
+
+
+            //zwraca obraz ukrywany
+            return newImage;
+        }
+
+        //wymaga obu pikseli w których plik graficzny zawiera bity obrazu ukrywanego
+        private byte unmergePixel(byte firstPixel, byte secondPixel)
+        {
+            //zamienia oba piksele na ciągi znaków reprezentujące wartości binarne pikseli
+            string firstPixelBin = Convert.ToString(firstPixel, 2).PadLeft(8, '0');
+            string secondPixelBin = Convert.ToString(secondPixel, 2).PadLeft(8, '0');
+
+            //zwraca nowy piksel złożony z 1 i 2 bitu pierwszego piksela oraz 3 i 4 drugiego piskela
+            return Convert.ToByte(firstPixelBin.Substring(6, 2) + secondPixelBin.Substring(6, 2) + "0000", 2);
+        }
+
+
+        //wymaga pikselu sprawdzanego
+        private bool haveValue(byte pixel)
+        {
+            //zamienia piksel na ciąg znaków reprezentujący wartość binarną piksela
+            string pixelBin = Convert.ToString(pixel, 2).PadLeft(8, '0');
+            //Jeżeli piksel nie posiada wartości na 7 i 8 bicie wtedy nie ma wartości ukrywanej
+            if (pixelBin.Substring(6, 2).Equals("00"))
+                return false;
+            //w przeciwnym wypadku posiada wartość ukrywaną
+            else
+                return true;
+        }
+
+        #endregion
+
         #region About
         private void btAbout_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Aplikacja zbiorcza z ćwiczeń laboratoryjnych\n" +
                 "Autor: Alan Hryncewicz\n" +
                 "Prowadzący: mgr. inż. Łukasz Roszkowiak\n" +
+                "Prowadząca: dr. hab. Anna Korzyńska\n" +
                 "Algorytmy Obrazów 2022\n" +
-                "Wit grupa ID: ID06IO2");
+                "Wit grupa ID: ID06IO2\n" +
+                "Icons: https://icons8.com");
         }
         #endregion
 
@@ -778,7 +965,6 @@ namespace APO
 
             return bmp;
         }
-
         #endregion
     }
 }

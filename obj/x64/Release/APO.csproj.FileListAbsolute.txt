@@ -31,3 +31,8 @@ C:\Users\Alan\Desktop\C#\APO\APO\obj\x64\Release\APO.csproj.CoreCompileInputs.ca
 C:\Users\Alan\Desktop\C#\APO\APO\obj\x64\Release\APO.csproj.CopyComplete
 C:\Users\Alan\Desktop\C#\APO\APO\obj\x64\Release\APO.exe
 C:\Users\Alan\Desktop\C#\APO\APO\obj\x64\Release\APO.pdb
+C:\Users\Alan\Desktop\C#\APO\APO\obj\x64\Release\APO.MedianBlur.resources
+C:\Users\Alan\Desktop\C#\APO\APO\obj\x64\Release\APO.Merge.resources
+C:\Users\Alan\Desktop\C#\APO\APO\obj\x64\Release\APO.Posterize.resources
+C:\Users\Alan\Desktop\C#\APO\APO\obj\x64\Release\APO.Prewitt.resources
+C:\Users\Alan\Desktop\C#\APO\APO\obj\x64\Release\APO.Laplacian.resources

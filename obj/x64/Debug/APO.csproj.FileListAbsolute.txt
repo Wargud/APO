@@ -35,3 +35,4 @@ C:\Users\Alan\Desktop\C#\APO\APO\obj\x64\Debug\APO.Posterize.resources
 C:\Users\Alan\Desktop\C#\APO\APO\obj\x64\Debug\APO.Laplacian.resources
 C:\Users\Alan\Desktop\C#\APO\APO\obj\x64\Debug\APO.Prewitt.resources
 C:\Users\Alan\Desktop\C#\APO\APO\obj\x64\Debug\APO.MedianBlur.resources
+C:\Users\Alan\Desktop\C#\APO\APO\obj\x64\Debug\APO.Merge.resources
